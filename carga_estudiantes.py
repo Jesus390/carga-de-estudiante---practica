@@ -23,12 +23,12 @@ def get_nota(minimo = 1, maximo = 10):
             if nota >= minimo and nota <= maximo :
                 return nota
             print("Error :")
-            print("Nota debe estar entre 1 y 10")
+            print("Nota debe estar entre " + str(minimo) + " y " + str(maximo))
             print("Ingresaste ", nota)
             linea_separador("+")
         except :
             print("Error :")
-            print("Ingresar Numero entre 1 y 10")
+            print("Ingresar Numero entre " + str(minimo) + " y " + str(maximo))
             linea_separador("+")
 
 def print_start():
