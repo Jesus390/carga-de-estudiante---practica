@@ -4,17 +4,6 @@ import sys
 
 db = "datos_estudiantes.txt"
 
-def linea_separador(tl = "-", c = 1):
-    if tl == "-":
-        print("-----------------------------------\n" * c)
-    elif tl == "=":
-        print("==================================\n" * c)
-    elif tl == "+":
-        print("+++++++++++++++++++++++++++++\n" * c)
-
-def pause():
-    input("Oprima cualquier tecla para continuar...")
-
 '''
 guarda los datos del estudiante en un archivo simulando una base de datos
 '''
@@ -27,7 +16,7 @@ def registrar_estudiante(dato_estudiante):
 verifica si el rango de nota esta entre el rango mínimo y máximo, si se encuentra en 
 el rango retorna la nota del estudiante, caso contrario vuelve a solicitar la nota
 '''
-def return_nota(minimo = 1, maximo = 10):
+def get_nota(minimo = 1, maximo = 10):
     while True:
         try:
             nota = float(input("Nota : "))
@@ -56,12 +45,24 @@ def print_start():
     print("6 - Estudiante con Mayor Nota")
     print("0 - Cerrar el Programa")
     linea_separador()
+    menu_principal()
 
 def print_end():
     linea_separador(c=2)
     print("\tPrograma Finalizado")
     linea_separador(c=2)
     exit()
+
+def linea_separador(tl = "-", c = 1):
+    if tl == "-":
+        print("-----------------------------------\n" * c)
+    elif tl == "=":
+        print("==================================\n" * c)
+    elif tl == "+":
+        print("+++++++++++++++++++++++++++++\n" * c)
+
+def pause():
+    input("Enter para continuar...")
 
 def print_menu_consultar():
     clear()
@@ -93,7 +94,7 @@ def ingresar_datos_estudiante():
         print("Ingrese los Datos del Estudiante...")
         nombre = input("Nombre : ")
         apellido = input("Apellido : ")
-        nota = return_nota()
+        nota = get_nota()
         redondeo_nota = 7 if nota>=6.5 and nota<7 else int(nota)
         dato_estudiante = {
             "nombre":nombre,
@@ -133,13 +134,13 @@ def do_new_register():
     f.write("")
     f.close()
 
-def nuevo_registro():
+def new_register():
     clear()
     print("Se eliminara el registro actual")
     print("Elija una opción :")
     print("1 - Nuevo Registro")
     print("0 - Cancelar")
-    token_opcion = return_opcion_number(1,1,0)
+    token_opcion = get_opcion_number(1,1)
     if token_opcion == 1:
         do_new_register()
     elif token_opcion == 0:
@@ -194,11 +195,14 @@ def get_estudiante_con_mayor_nota():
             estudiante_nota_mayor = estudiante
             is_array_objcet = False
         elif nota_mayor==estudiante['nota real']:
-            aux_estudiante_nota_mayor = estudiante_nota_mayor
-            estudiante_nota_mayor = []
-            estudiante_nota_mayor.append(aux_estudiante_nota_mayor)
-            estudiante_nota_mayor.append(estudiante)
-            del aux_estudiante_nota_mayor
+            if is_array_objcet:
+                estudiante_nota_mayor.append(estudiante)
+            else:
+                aux_estudiante_nota_mayor = estudiante_nota_mayor
+                estudiante_nota_mayor = []
+                estudiante_nota_mayor.append(aux_estudiante_nota_mayor)
+                estudiante_nota_mayor.append(estudiante)
+                del aux_estudiante_nota_mayor
             is_array_objcet = True
     type_data =  0 if is_array_objcet else 1
     return {"type":type_data, "data":estudiante_nota_mayor}
@@ -208,26 +212,30 @@ def print_estudiante_con_mayor_nota():
     linea_separador()
     estudiante = get_estudiante_con_mayor_nota()
     if estudiante['type']==0:
+        print("Los Estudiantes con mejores notas son :")
         for data in estudiante['data']:
-            print_text_estudiante_con_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
+            print_estudiantes_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
     else:
         data = estudiante['data']
-        print_text_estudiante_con_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
+        print_estudiante_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
     linea_separador("=", 2)
     pause()
-    
-def print_text_estudiante_con_mayor_nota(nombre, nota):
+
+def print_estudiantes_mayor_nota(nombre, nota):
+    print(nombre + " con nota : " + str(nota))
+
+def print_estudiante_mayor_nota(nombre, nota):
     print(nombre + " es el/la mejor estudiante que consiguió la nota más alta : " + str(nota))
 
 def menu_principal():    
-    token_opcion = return_opcion_number(1, 6, 0)
+    token_opcion = get_opcion_number(1, 6)
     if token_opcion == 1:
         clear()
         ingresar_datos_estudiante()
     elif token_opcion == 2:
         menu_consultar()
     elif token_opcion == 3:
-        nuevo_registro()
+        new_register()
     elif token_opcion == 4:
         print_promedio_notas()
     elif token_opcion == 5:
@@ -242,7 +250,7 @@ def menu_consultar():
     while True:
         clear()
         print_menu_consultar()
-        token_opcion = return_opcion_number(1,1,0)
+        token_opcion = get_opcion_number(1,1)
         if token_opcion == 1:
             todos_datos_estudiantes()
             break
@@ -256,7 +264,7 @@ def todos_datos_estudiantes():
     datos_estudiantes = get_registro_estudiantes()
     mostrar_datos_estudiante(datos_estudiantes)
 
-def return_opcion_number(minimo, maximo, close):
+def get_opcion_number(minimo, maximo, close = 0):
     while True:
         try:
             token_opcion = int(input("Ingrese una opción : "))
@@ -269,7 +277,6 @@ def init():
     while True:
         clear()
         print_start()
-        menu_principal()
 
 
 if "__main__"==__name__:
