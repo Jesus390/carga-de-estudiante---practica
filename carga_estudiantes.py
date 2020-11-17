@@ -214,18 +214,18 @@ def print_estudiante_con_mayor_nota():
     if estudiante['type']==0:
         print("Los Estudiantes con mejores notas son :")
         for data in estudiante['data']:
-            print_estudiantes_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
+            print_estudiante_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'], True)
     else:
         data = estudiante['data']
         print_estudiante_mayor_nota(data['nombre'] + " " + data['apellido'], data['nota real'])
     linea_separador("=", 2)
     pause()
 
-def print_estudiantes_mayor_nota(nombre, nota):
-    print(nombre + " con nota : " + str(nota))
-
-def print_estudiante_mayor_nota(nombre, nota):
-    print(nombre + " es el/la mejor estudiante que consiguió la nota más alta : " + str(nota))
+def print_estudiante_mayor_nota(nombre, nota, mas_de_uno = False):
+    if mas_de_uno:
+        print(nombre + " con nota : " + str(nota))
+    else:
+        print(nombre + " es el/la mejor estudiante que consiguió la nota más alta : " + str(nota))
 
 def menu_principal():    
     token_opcion = get_opcion_number(1, 6)
