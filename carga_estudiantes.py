@@ -1,16 +1,22 @@
 import json
 import os
 import sys
+import base64
 
-db = "datos_estudiantes.txt"
+db = "datos_estudiantes.dbe"
 
 '''
 guarda los datos del estudiante en un archivo simulando una base de datos
 '''
 def registrar_estudiante(dato_estudiante):
-	f = open(db,"a")
-	f.write(dato_estudiante + "\n")
-	f.close()
+    f = open(db,"a")
+    dato_estudiante = dato_estudiante.encode('ascii')
+    dato_estudiante = base64.b64encode(dato_estudiante)
+    w = dato_estudiante.decode('ascii')
+    l = len(w)
+    w = w[int(l/2):]+w[:int(l/2)]
+    f.write( w + "\n")
+    f.close()
 
 '''
 verifica si el rango de nota esta entre el rango mínimo y máximo, si se encuentra en 
@@ -77,7 +83,11 @@ def get_registro_estudiantes():
         line = f.readline()
         if not line:
             break
-        datos_estudiantes.append(json.loads(line))
+        l = len(line)
+        line = line[int(l/2):]+line[:int(l/2)]
+        line = line.encode('ascii')
+        line = base64.b64decode(line)
+        datos_estudiantes.append(json.loads(line.decode('ascii')))
     f.close()
     return datos_estudiantes
 
